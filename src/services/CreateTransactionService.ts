@@ -1,7 +1,9 @@
 // import AppError from '../errors/AppError';
-import { getRepository } from 'typeorm';
+import { getRepository, getCustomRepository } from 'typeorm';
 import Transaction from '../models/Transaction';
 import Category from '../models/Category';
+import TransactionRepository from '../repositories/TransactionsRepository';
+import AppError from '../errors/AppError';
 
 interface RequestDTO {
   title: string;
@@ -16,8 +18,17 @@ class CreateTransactionService {
     type,
     category,
   }: RequestDTO): Promise<Transaction> {
-    const transactionRepository = getRepository(Transaction);
+    const transactionRepository = getCustomRepository(TransactionRepository);
     const categoryRepository = getRepository(Category);
+
+    if (!['income', 'outcome'].includes(type)) {
+      throw new Error('Type ins invalid');
+    }
+
+    const { total } = await transactionRepository.getBalance();
+    if (type === 'outcome' && total < value) {
+      throw new AppError('You do not have enough balance for this transaction');
+    }
 
     let categorySelected = await categoryRepository.findOne({
       where: { title: category },
