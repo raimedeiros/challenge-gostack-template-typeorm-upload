@@ -7,20 +7,21 @@ import { Router } from 'express';
 
 const transactionsRouter = Router();
 
-transactionsRouter.get('/', async (request, response) => {
+/* transactionsRouter.get('/', async (request, response) => {
   // TODO
 });
-
+ */
 transactionsRouter.post('/', async (request, response) => {
-  // TODO
+  // const { title, value, type, category } = request.body;
+  return response.json({ post: 'rota' });
 });
 
-transactionsRouter.delete('/:id', async (request, response) => {
+/* transactionsRouter.delete('/:id', async (request, response) => {
   // TODO
 });
 
 transactionsRouter.post('/import', async (request, response) => {
   // TODO
-});
+}); */
 
 export default transactionsRouter;
